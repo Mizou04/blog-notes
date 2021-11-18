@@ -1,0 +1,109 @@
+@import "../../sass/style.variables";
+@import "../../sass/layout.scss"; 
+
+.main--body {
+    background : $main-color;
+    width : 100vw;
+    min-height : 100vh;
+}
+
+.main--section{
+    width: 100%;
+    height : calc(100vh - 100px);
+}
+
+.main--section-presentation{
+    @extend .flexAround;
+    background: url("../../assets/blue\ circle.svg") no-repeat 20% 200%, 
+                url("../../assets/yellow circle.svg") no-repeat 95% 5%;
+    background-size: 600px 600px, 180px 180px;
+}
+
+.section--text{
+    @extend .flexCenter;
+    width : 50%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: start;
+    text-align: center;
+}
+
+.section--text_title{
+    font-size: 3em;
+    margin-top: 30%;
+}
+
+.section--text_subtitle{
+    color : $crimson-ish;
+}
+.section--text_description{
+    margin-top: 20px;
+    color : darkslategray;
+}
+
+.section--product{
+    @extend .flexCenter;
+    width : 50%;
+    height : 100%;
+}
+
+.section--product_img{
+    overflow: visible;
+    width : auto;
+    height : 380px;
+    border-radius: 50%;
+    position: relative;
+    margin-left: -20px;
+    background : url("../../assets/crimson\ circle.svg") no-repeat;
+    background-size: 380px;
+}
+.main--section-offers{
+    text-align: center;
+    align-items: flex-start;
+}
+.main--section-offers_title{
+    font-size: 2.5em;
+    color : darkslategrey;
+    font-weight: 300;
+}
+.offers{
+    height : 400px;
+    background: url("../../assets/green\ circle.svg") no-repeat 100px 20%;
+    background-size: 100px 100px;
+}
+.offers--tags{
+    @extend .flexAround;
+    flex-direction: row;
+    height: 60%;
+    width: 80%;
+    margin: auto;
+}
+.offers--tags_tag{
+    width: 180px;
+    height: 100%;
+    box-shadow: 0px 1px 5px 1px $shadow;
+    border-radius: 10px;
+    margin-top: 60px;
+    // text-align: center;
+}
+.offers--tags_tag-icon{
+    color : rgb(253, 0, 42);
+    transform: scale(2, 2);
+    margin-bottom: 20px;
+}
+
+.offers--tags_tag-text{
+    margin: auto;
+    margin-top: 30px;
+    width: 90%;
+}
+.offers--tags_tag-link{
+    color: rgb(253, 0, 42);
+    margin-bottom: -40px;
+    font-weight: 300;    
+}
+
+.offers--description{
+    font-size: 1.2em;
+    font-weight: 300;
+}

@@ -1,0 +1,41 @@
+@import "../../sass/style.variables";
+@import "../../sass/layout.scss"; 
+
+.header--desktop{
+    @extend .flexAround;
+    position : absolute;
+    top : 0;
+    left : 0;
+    z-index: 1111;
+    height : 50px;
+    width : 100%;
+}
+.header--logo{
+    font-weight : 300;
+}
+.header--navbar{
+    @extend .flexAround;
+    width : 50%;
+    list-style : none;
+    font-weight : 300;
+}
+.header--link{
+    color : black;
+    text-decoration : none;
+    position : relative;
+    font-size : .9em;
+}
+
+.header--button-login{
+    border-radius: 100px;
+    padding : 6px 25px;
+    background : transparent;
+    border : 1px rgba(0, 0, 0, 0.376) solid;
+    color : black;
+    cursor: pointer;
+}
+.header--button-login:hover{
+    background : darkslategray;
+    color : white;
+    transition : all .3s 0s cubic-bezier(0.68, -0.55, 0.265, 1.55)
+}
