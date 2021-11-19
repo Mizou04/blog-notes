@@ -1,0 +1,135 @@
+@import "../../sass/style.variables";
+@import "../../sass/layout.scss";
+// *{
+//     color : white;
+//     // border: 1px red dotted;
+// }
+.profile--body{
+    @extend .flexBetween;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    background-color : $main-color;
+
+    .profile_banner{
+        z-index: 8888;
+        width: 14%;
+        height: 100%;
+        background : linear-gradient(to bottom, rgb(196, 2, 21) 30%, rgb(221, 39, 69));
+        box-shadow: inset -5px 0px 5px 1px rgba(0, 0, 0, 0.316);
+    }
+
+    .profile_user{
+        @extend .flexAround;
+        justify-content: start;
+        flex-direction: column;
+        width: 20%;
+        height: 90%;
+        margin-top: 70px;
+        border: 1px solid $shadow;
+        border-radius: 15px;
+        padding: 5px;
+        text-align: center;
+        
+        .profile_user--infos{
+            height: 40%;
+            width : 100%;
+        }
+        
+        .profile_user--infos-picture{
+            width: 120px;
+            height: auto;
+            border-radius: 50%;
+            border: 1px $shadow solid;
+        }
+        
+        .profile_user--infos-name{
+            font-weight: 400;
+        }
+        .profile_user--infos-titulo{
+            font-weight: 300;
+            color: darkslategrey;
+            font-size: .9em;
+        }
+
+        .profile_user--favorites-container{
+            margin-top: 10px;
+            height: 40%;
+            width: 100%;
+            padding: 10px;
+            border: 1px rgba(78, 255, 122, 0.423) solid;
+        }
+
+        .profile_user--favorites{
+            overflow-y: scroll;
+            height: 100%;
+            width: 100%;
+        }
+        .profile_user--favorites::-webkit-scrollbar{
+            width: 5px;
+            height: 5px;
+            background-color: $shadow;
+            border-radius: 10px;
+        }
+        .profile_user--favorites::-webkit-scrollbar-thumb{
+            width: 5px;
+            background-color: darkslategray;
+            border-radius: 10px;
+        }
+        .profile_user--favorite{
+            @extend .boxShadow;
+            @extend .flexAround;
+            height: 80px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .profile_user--favorite-thumb{
+            width: 30px;
+            height: auto;
+        }
+        .profile_user--favorites-description{
+            @extend .flexCenter;
+            flex-direction: column;
+            height: 90%;
+            margin: auto;
+        }
+    }
+
+    .profile_data{
+        width: calc(100% - 14% - 20%);
+        height: 90%;
+        padding: 0px 15px;
+        margin-top: 40px;
+        overflow-y: scroll;
+        
+        .articles--container{
+            @extend .flexAround;
+            justify-content: start;
+            height: 260px;
+            width: 100%;
+            overflow-x: scroll;
+        }
+        .articles--container::-webkit-scrollbar{
+            width: 5px;
+            height: 5px;
+            background-color: $shadow;
+            border-radius: 10px;
+        }
+        .articles--container::-webkit-scrollbar-thumb{
+            width: 5px;
+            background-color: darkslategray;
+            border-radius: 10px;
+        }
+    }
+    .profile_data::-webkit-scrollbar{
+        width: 8px;
+        background-color: $shadow;
+        border-radius: 10px;
+    }
+    .profile_data::-webkit-scrollbar-thumb{
+        width: 8px;
+        background-color: darkslategray;
+        border-radius: 10px;
+    }
+    
+}

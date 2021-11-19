@@ -1,0 +1,42 @@
+@import "../../sass/style.variables";
+@import "../../sass/layout.scss";
+
+.login_page{
+    @extend .flexCenter;
+    height: 100vh;
+    width : 100vw;
+    background : lightblue;
+}
+
+.login_page--display{
+    @extend .flexCenter;
+    width: 50%;
+    height: 85%;
+    padding: 30px 15px;
+    background : $main-color;
+}
+
+.login_page--form{
+    height: 100%;
+    width: 100%;
+    border : 1px $shadow solid;
+    border-radius: 20px;
+}
+
+.login_page--form-label{
+    @extend .flexCenter;
+    width: 100%;
+    height: auto;
+    p{
+        color : darkslategray;
+        font-size: 1.1em;
+    }
+}
+
+.login_page--connect{
+    @extend .flexCenter;
+    @extend .boxShadow;
+    width: 90%;
+    padding: 10px 20px;
+    color: black;
+}

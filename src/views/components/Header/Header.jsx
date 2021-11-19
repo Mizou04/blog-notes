@@ -12,7 +12,8 @@ function Header(props) {
                 <li><NavLink activeStyle={{color : "crimson"}} to="/about" className="header--link">About</NavLink></li>
                 <li><NavLink activeStyle={{color : "crimson"}} to="/articles" className="header--link">Articles</NavLink></li>
             </ul>
-            <button className="header--button-login" /*='header--button-login'*/>start now</button>
+            <RouterLink to='/start'><button className="header--button-login">start now!</button></RouterLink>
+            {/* <Button component={RouterLink} variant='outlined' /*style={{borderRadius : "30px", background : "transparent"}} className="header--button-login">start now</Button> */}
         </header>
     );
 }
