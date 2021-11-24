@@ -5,23 +5,29 @@
     @extend .flexCenter;
     height: 100vh;
     width : 100vw;
-    background : lightblue;
 }
 
 .login_page--display{
+    @extend .boxShadow;
     @extend .flexCenter;
-    width: 50%;
+    width: 60%;
     height: 85%;
     padding: 30px 15px;
     background : $main-color;
+    border : 1px $shadow solid;
 }
 
-.login_page--form{
-    height: 100%;
+.login_page--form-google{
+    @extend .flexCenter;
+    flex-direction: column;
+    justify-content: start;
+    height: 90%;
     width: 100%;
     border : 1px $shadow solid;
     border-radius: 20px;
+    text-align: center
 }
+
 
 .login_page--form-label{
     @extend .flexCenter;
@@ -33,10 +39,40 @@
     }
 }
 
+
+.login_page--form_label-google{
+    @extend .flexAround;
+    flex-direction: column;
+    margin-top: 30%;
+    height: 150px;
+}
+
+
+.login_page--form-mail{
+    @extend .flexCenter;
+    flex-direction: column;
+    width: 100%;
+    height: 90%;
+    padding: 0px 10px;
+
+}
+.login_page--connect-email, .login_page--connect-password{
+    margin: auto;
+    margin-bottom: 20px;
+}
+.login_page--button-sumbit{
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 220px;
+    color : green;
+}
+
 .login_page--connect{
     @extend .flexCenter;
     @extend .boxShadow;
     width: 90%;
     padding: 10px 20px;
     color: black;
+    margin-top: 40px;
 }

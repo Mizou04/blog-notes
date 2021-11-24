@@ -17,6 +17,7 @@ function App(props) {
             <Route path="/about"><AboutPage/></Route>
             <Route path="/profile"><ProfilePage/></Route>
             <Route path="/start"><LoginPage/></Route>
+            <Route><p style={{width : "100vw", height : "100vh", display : "flex", justifyContent  :"center", alignItems : "center"}}>Error : Page not found</p></Route>
         </Switch>
         </>
     );

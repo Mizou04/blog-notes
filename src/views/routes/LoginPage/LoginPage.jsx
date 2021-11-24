@@ -1,30 +1,40 @@
-import React from 'react';
+import { memo, useContext, useEffect } from 'react';
 import "./style.scss";
 import {Input, Button, Divider, InputLabel} from "@material-ui/core"
-import {} from "@material-ui/icons"
+import {LoginContext} from "../../../controllers/login.controller"
+
 
 function LoginPage(props) {
+    const {loginHandler, userInstance} = useContext(LoginContext);
+
     return (
-        <body className="login_page">
+        <main className="login_page">
             <div className="login_page--display">
-                <div className="login_page--form">
-                    <InputLabel className="login_page--form-label" itemID="connectWithGoogle">
-                        <p>connect with google account :</p>
-                        <Button variant="outlined" id="connectWithGoogle" className="login_page--connect login_page--connect-google"/> 
+                <div className="login_page--form-google">
+                    <InputLabel className="login_page--form-label login_page--form_label-google" itemID="connectWithGoogle">
+                        <p style={{marginBottom : "20px"}}>connect with google account :</p>
+                        <Button variant="outlined" onClick={loginHandler} id="connectWithGoogle" className="login_page--connect login_page--connect-google">
+                            connect with Google    
+                        </Button> 
                     </InputLabel>
-                    <Divider>or</Divider>
-                    <InputLabel className="login_page--form-label" itemId="connectWithEmail">
+                </div>
+                <form className='login_page--form-mail' action="" method="post">
+                <span style={{color : "red" ,marginTop : "-20", marginBottom : "20"}}>! this is not availabe, use Google login only</span>
+                    <InputLabel className="login_page--form-label login_page--form_label-email" itemId="connectWithEmail">
                         <p>via email :</p> 
                         <Input id="connectWithEmail" className="login_page--connect login_page--connect-email" placeholder="example@example.com"/>
                     </InputLabel>
-                    <InputLabel itemId="password">
+                    <hr/>
+                    <InputLabel style={{marginBottom : "20px"}} itemId="password">
                         <p>and password :</p> 
                         <Input id="password" className="login_page--connect login_page--connect-password" type="password" placeholder="********"/>
+                        <a href="/start">don't have an account?</a>
                     </InputLabel>
-                </div>        
+                    <Button variant="contained" className="login_page--button-sumbit" color="primary">Login</Button>
+                </form>
             </div>
-        </body>
+        </main>
     );
 }
 
-export default LoginPage;
+export default memo(LoginPage);

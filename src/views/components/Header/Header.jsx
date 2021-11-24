@@ -1,9 +1,13 @@
-import React from 'react';
+import React, {useContext, useEffect} from 'react';
 import "./style.scss"
 import {Button, Typography} from "@material-ui/core"
 import {Link as RouterLink, NavLink} from "react-router-dom";
+import {LoginContext} from "../../../controllers/login.controller"
+
 
 function Header(props) {
+    const {signOutHandler, userInstance} = useContext(LoginContext);
+
     return (
         <header className="header header--desktop">
             <h1 className="header--logo">Blog.</h1>
@@ -12,10 +16,12 @@ function Header(props) {
                 <li><NavLink activeStyle={{color : "crimson"}} to="/about" className="header--link">About</NavLink></li>
                 <li><NavLink activeStyle={{color : "crimson"}} to="/articles" className="header--link">Articles</NavLink></li>
             </ul>
-            <RouterLink to='/start'><button className="header--button-login">start now!</button></RouterLink>
-            {/* <Button component={RouterLink} variant='outlined' /*style={{borderRadius : "30px", background : "transparent"}} className="header--button-login">start now</Button> */}
+            {
+                userInstance ? <a onClick={signOutHandler}>logout</a> :
+                <RouterLink to='./start'><button className="header--button-login">start now!</button></RouterLink>
+            }            
         </header>
     );
-}
+} 
 
 export default Header;

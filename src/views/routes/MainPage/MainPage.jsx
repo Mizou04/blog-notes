@@ -1,12 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import "./style.scss"
 // import { Link as RouterLink} from "react-router-dom"
 import {Box, Button, Card ,Paper, Typography} from "@material-ui/core"
 import {PostAddTwoTone, ArtTrackSharp, Policy} from "@material-ui/icons"
 import noteBook from "../../assets/note book 3d.png"
-import { blue } from '@material-ui/core/colors';
 
 function MainPage(props) {
+
+
     return (
         <main className="main main--body">
             <section className="main--section main--section-presentation"> 
