@@ -5,9 +5,11 @@
     @extend .flexAround;
     @extend .boxShadow;
     flex-direction: column;
-    min-width: 230px;
+    min-width: 240px;
+    max-width: 250px;
     height: 200px;
     margin : 0px 5px;
+    display: inline-block;
 }
 
 .article_card--thumb{

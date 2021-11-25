@@ -6,6 +6,7 @@ import AboutPage from './views/routes/AboutPage/AboutPage';
 import MainPage from "./views/routes/MainPage/MainPage.jsx";
 import ProfilePage from './views/routes/ProfilePage/ProfilePage';
 import LoginPage from './views/routes/LoginPage/LoginPage';
+import BlogPost from './views/components/BlogPost/BlogPost';
 
 
 function App(props) {
@@ -13,11 +14,12 @@ function App(props) {
         <>
         <Header/>
         <Switch>
-            <Route exact path="/"><MainPage/></Route>
+            {/* <Route exact path="/"><MainPage/></Route> */}
+            <Route exact path="/"><BlogPost/></Route>
             <Route path="/about"><AboutPage/></Route>
             <Route path="/profile"><ProfilePage/></Route>
             <Route path="/start"><LoginPage/></Route>
-            <Route><p style={{width : "100vw", height : "100vh", display : "flex", justifyContent  :"center", alignItems : "center"}}>Error : Page not found</p></Route>
+            <Route><p style={{width : "100vw", height : "calc(100vh - 50px)", display : "flex", justifyContent  :"center", alignItems : "center"}}>Error : Page not found</p></Route>
         </Switch>
         </>
     );

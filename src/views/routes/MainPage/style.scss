@@ -5,6 +5,10 @@
     background : $main-color;
     width : 100vw;
     min-height : 100vh;
+    z-index: -110;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 .main--section{
