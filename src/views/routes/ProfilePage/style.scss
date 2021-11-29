@@ -30,7 +30,14 @@
         border-radius: 15px;
         padding: 5px;
         text-align: center;
+        position : relative;
         
+        .profile_user--modify-btn{
+            position : absolute;
+            right : 10px;
+            top : 10px;
+        }
+
         .profile_user--infos{
             height: 40%;
             width : 100%;
@@ -47,9 +54,15 @@
             font-weight: 400;
         }
         .profile_user--infos-titulo{
-            font-weight: 300;
+            font-weight: 400;
             color: darkslategrey;
             font-size: .9em;
+        }
+        
+        .profile_user--infos-joined{
+            font-weight: 300;
+            font-size : .9em;
+            color : blue;
         }
 
         .profile_user--favorites-container{

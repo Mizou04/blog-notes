@@ -20,14 +20,14 @@ function LoginPage(props) {
                 </div>
                 <form className='login_page--form-mail' action="" method="post">
                 <span style={{color : "red" ,marginTop : "-20", marginBottom : "20"}}>! this is not availabe, use Google login only</span>
-                    <InputLabel className="login_page--form-label login_page--form_label-email" itemId="connectWithEmail">
+                    <InputLabel className="login_page--form-label login_page--form_label-email" itemID="connectWithEmail">
                         <p>via email :</p> 
                         <Input id="connectWithEmail" className="login_page--connect login_page--connect-email" placeholder="example@example.com"/>
                     </InputLabel>
                     <hr/>
                     <InputLabel style={{marginBottom : "20px"}} itemId="password">
                         <p>and password :</p> 
-                        <Input id="password" className="login_page--connect login_page--connect-password" type="password" placeholder="********"/>
+                        <Input id="password" autoComplete="current-password" className="login_page--connect login_page--connect-password" type="password" placeholder="********"/>
                         <a href="/start">don't have an account?</a>
                     </InputLabel>
                     <Button variant="contained" className="login_page--button-sumbit" color="primary">Login</Button>

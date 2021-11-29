@@ -25,7 +25,7 @@ function MainPage(props) {
                 </div>   
             </section>
             <section className="main--section main--section-offers">
-                <h3 className="main--section-offers_title">What we have for you?</h3>
+                <h3 className="main--section-offers_title">What do we have for you?</h3>
                 <div className="offers">
                     <p className="offers--description">
                         whatever your style is, we got you!

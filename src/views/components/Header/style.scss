@@ -1,7 +1,7 @@
 @import "../../sass/style.variables";
 @import "../../sass/layout.scss"; 
 
-.header--desktop{
+.header-desktop{
     @extend .flexAround;
     position : absolute;
     top : 0;
