@@ -51,14 +51,14 @@ class AuthModel{
     }
 
     login(){
-        let returnedData = null;
+        let returnedData = {};
         signInWithPopup(this.auth , this.googleProvider)
         .then((result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
             // The signed-in user info.
-            returnedData = result.user;
+            return returnedData = {...result.user};
         }).catch((error) => {
             // Handle Errors here.
             const errorCode = error.code;
@@ -68,14 +68,13 @@ class AuthModel{
             // The AuthCredential type that was used.
             // const credential = GoogleAuthProvider.credentialFromError(error);
             // ...
-            returnedData = error
+            return returnedData = {...error}
             // history.replace("/")
         });
-        return returnedData;
     }
 
     logout(){
-        signOut(this.auth)
+        signOut(this.auth);;
     }
 };
 
