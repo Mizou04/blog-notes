@@ -20,7 +20,7 @@ function App(props) {
             <Route exact path="/"><MainPage/></Route>
             {/* <Route exact path="/"><BlogPost/></Route> */}
             <Route path="/about"><AboutPage/></Route>
-            <Route path="/profile"><ProfilePage/></Route>
+            <Route path="/profile/:userID"><ProfilePage/></Route>
             {Object.keys(userSession).length === 0 && <Route path="/start"><LoginPage/></Route>}
             <Route><p style={{width : "100vw", height : "100vh", display : "flex", justifyContent  :"center", alignItems : "center"}}>Error : Page not found</p></Route>
         </Switch>

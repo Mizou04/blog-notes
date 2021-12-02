@@ -1,39 +1,51 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext, useState, memo } from 'react';
 import "./style.scss";
 import profileImg from "../../assets/blue circle.svg"
 import articleImg from "../../assets/note book 3d.png"
 import ArticleCard from '../../components/ArticleCard/ArticleCard';
 import { Button, Typography } from '@material-ui/core';
 import {Add, Settings} from "@material-ui/icons"
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
+import { LoginContext } from '../../../controllers/login.controller';
+import { UserContext } from '../../../controllers/user.controller';
 
 function ProfilePage(props) {
-    const {userSession} = useHistory()?.location?.state;
-    const {name, joined, description, lastOnline, profilePic, articles} = userSession;
+    const {getUser, updateUser, getUsersPath} = useContext(UserContext);
+    const {ownerID} = useContext(LoginContext);
+    const {userID} = useParams();
+    const [user, setUser] = useState({});
+    const {name, joined, description, lastOnline, profilePic, articles} = user;
+
+    const isOwner = ownerID === userID;
 
     let favorites = Array(5).fill({img : articleImg, title : "topic", description : "genre"});
 
+    // function getDate(string) {
+    //     let [_, month, day, year] =
+    //     /(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(string);
+    //     return `joined : ${day}/${month}/${year}`;
+    // }
+
     useEffect(()=>{
-        console.log(userSession);
-        console.log(/\d{2}\/d{2}\/d{4}/ig.exec(joined))
-    })
-    function getDate(string) {
-        let [_, month, day, year] =
-        /(\d{1,2})\/(\d{1,2})\/(\d{4})/.exec(string);
-        return `joined : ${day}/${month}/${year}`;
-    }
+        async function fetchUser(userID){
+            let userDoc = await getUser(getUsersPath + userID);
+            setUser(userDoc.data());
+        };
+        fetchUser(userID)
+    }, [userID])
+
     return (
         <body className="profile profile--body">
             <section className="profile_banner">
-                <Button startIcon={<Add/>} >change banner photo</Button>
+                {isOwner && <Button startIcon={<Add/>} >change banner photo</Button>}
             </section>
             <section className="profile_user">
-                <Button className="profile_user--modify-btn" variant="text"><Settings/></Button>
+                {isOwner && <Button className="profile_user--modify-btn" variant="text"><Settings/></Button>}
                 <div className="profile_user--infos">
                     <img src={profilePic} className="profile_user--infos-picture"/>
                     <h3 className="profile_user--infos-name">{name}</h3>
                     <p className="profile_user--infos-titulo">{description || "programmer"}</p>
-                    <p className="profile_user--infos-joined">{getDate(joined)}</p>
+                    {/* <p className="profile_user--infos-joined">{getDate(user?.joined)}</p> */}
             
                     <div className="badges"></div>
                 </div>
@@ -76,4 +88,4 @@ function ProfilePage(props) {
 
 
 
-export default ProfilePage;
+export default memo(ProfilePage);

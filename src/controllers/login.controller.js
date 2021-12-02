@@ -9,28 +9,26 @@ export const LoginContext = createContext();
 
 export default function LoginController({children}){
     const {getUser, setUser, updateUser, getUsersPath} = useContext(UserContext);
-    
     const [userSession, setUserSession] = useState({}); 
+    const [ownerID, setOwnerID] = useState(null);
 
     let history = useHistory();
 
-    useEffect(()=>{
-        console.log(userSession)
-    }, [userSession]);
 
     useEffect(()=>{
 
         onAuthStateChanged(authModel.auth, async (user)=>{
             if(user){
                 let document = await getUser(getUsersPath + user.uid);
+                setOwnerID(user.uid)
                 if(document && document.exists()){
                     await updateUser(getUsersPath + user.uid,
                         {
                             lastOnline : new Date().toLocaleString(),
                         });
-                    let userDoc = await getUser(getUsersPath + user.uid);
-                    setUserSession(userDoc.data());
-                    history.replace("/")
+                    document = await getUser(getUsersPath + user.uid);
+                    setUserSession(document.data());
+                    // history.replace("/profile/:userID")
                 } else {
                     await setUser(getUsersPath + user.uid, {
                     name : user.displayName,
@@ -41,13 +39,15 @@ export default function LoginController({children}){
                     lastOnline : new Date().toLocaleString(),
                     id : user.uid
                     });
-                    let userDoc = await getUser(getUsersPath + user.uid);
-                    setUserSession(userDoc.data());
-                    history.replace("/")
-                }
+                        document = await getUser(getUsersPath + user.uid);
+                    }
+                setUserSession(document.data());
+                history.replace("/profile/"+user.uid)
+
             } else {
                 setUserSession({});
-                history.replace("/start")
+                setOwnerID(null);
+                // history.replace("/start")
             }
         })
     }, [authModel.auth])
@@ -61,7 +61,7 @@ export default function LoginController({children}){
     })
 
     return (
-        <LoginContext.Provider value={{loginHandler, signOutHandler, userSession}}>
+        <LoginContext.Provider value={{loginHandler, signOutHandler, userSession, ownerID}}>
             {children}
         </LoginContext.Provider>
     )

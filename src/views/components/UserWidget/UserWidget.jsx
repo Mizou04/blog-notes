@@ -6,10 +6,9 @@ import {LoginContext} from "../../../controllers/login.controller"
 import './style.scss'
 
 const UserWidget= () => {
-    const {signOutHandler, userSession} = useContext(LoginContext);
+    const {signOutHandler, userSession, ownerID} = useContext(LoginContext);
     let {name, profilePic} = userSession;
     let [dropDownMenuVisibility, setDropDownMenuVisiblity] = useState(true);
-    let btnRef = createRef();
     
     useEffect(()=>{
         console.log(userSession)
@@ -17,9 +16,9 @@ const UserWidget= () => {
 
     return (
         <div className="header-desktop_widget">
-            <Button ref={btnRef} onClick={()=>{setDropDownMenuVisiblity(state=> state === true ? false : true)}} style={{display : "flex", "justify-content" : "space-around", "align-items" : "center", width : "95%"}} className="header-desktop_widget--btn" endIcon={dropDownMenuVisibility == true ? <ArrowDropDown/> : <ArrowDropUp/>}><img width="40" style={{borderRadius : "50%"}} height="40" src={profilePic} />{name}</Button>
+            <Button onClick={()=>{setDropDownMenuVisiblity(state=> state === true ? false : true)}} style={{display : "flex", "justify-content" : "space-around", "align-items" : "center", width : "95%"}} className="header-desktop_widget--btn" endIcon={dropDownMenuVisibility == true ? <ArrowDropDown/> : <ArrowDropUp/>}><img width="40" style={{borderRadius : "50%"}} height="40" src={profilePic} />{name}</Button>
             <Box component={Paper} className="header-desktop_widget--dropMenu" hidden={dropDownMenuVisibility}>
-                <RouterLink onClick={()=>{setDropDownMenuVisiblity(true)}} className="header-desktop_widget--dropMenu-item" to={{pathname : "/profile", state : {userSession}}}><MenuItem style={{"text-align" : "center"}}>Profile</MenuItem></RouterLink>    
+                <RouterLink onClick={()=>{setDropDownMenuVisiblity(true)}} className="header-desktop_widget--dropMenu-item" to={{pathname : `/profile/${ownerID}`}}><MenuItem style={{"text-align" : "center"}}>Profile</MenuItem></RouterLink>    
                 <MenuItem onClick={()=>{setDropDownMenuVisiblity(true)}} className="header-desktop_widget--dropMenu-item" style={{"text-align" : "center"}} onClick={signOutHandler}>Logout</MenuItem>
             </Box>
         </div>

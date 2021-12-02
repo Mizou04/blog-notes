@@ -20,7 +20,7 @@ function Header(props) {
             {
                 Object.keys(userSession).length !== 0 ? <UserWidget/> :
                 // Object.keys(userSession).length !== 0 ? <a onClick={signOutHandler}>logout</a> :
-                <RouterLink to='./start'><button className="header--button-login">start now!</button></RouterLink>
+                <RouterLink to='/start'><button className="header--button-login">start now!</button></RouterLink>
             }            
         </header>
     );

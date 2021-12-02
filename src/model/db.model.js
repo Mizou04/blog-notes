@@ -16,7 +16,7 @@ class IdbModel {
     removeDoc(){}
 }
 
-class dbRef extends IdbModel {
+class DBRef extends IdbModel {
     constructor(firestore ,collection, path){
         super(firestore, collection, path);
     }
@@ -76,4 +76,5 @@ class dbRef extends IdbModel {
 
 }
 
-export const userDBref = new dbRef(getFirestore(fireApp), collection, "users/");
+export const userDBref = new DBRef(getFirestore(fireApp), collection, "users/");
+export const articlesDBref = new DBRef(getFirestore(fireApp), collection, "articles/")
