@@ -6,11 +6,11 @@ export const UserContext = React.createContext()
 function UserController(props) {
 
     const setUser = useCallback(async (path, userData) =>{
-        userDBref.setDoc(path, userData)
+        await userDBref.setDoc(path, userData)
     })
 
     const updateUser = useCallback(async (path, data)=>{
-        userDBref.updateDoc(path, data)
+        await userDBref.updateDoc(path, data)
     })
 
     const getUser = useCallback(async (path)=>{
