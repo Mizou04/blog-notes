@@ -11,10 +11,15 @@ import BlogPost from './views/components/BlogPost/BlogPost';
 import {LoginContext} from "./controllers/login.controller"
 import ArticlesPage from './views/routes/ArticlesPage/ArticlesPage';
 
+import {createTheme, ThemeProvider, } from "@material-ui/core/styles"
+import { orange } from '@material-ui/core/colors';
+
+
 function App(props) {
     const {userSession} = React.useContext(LoginContext)
 
     return (
+        // <ThemeProvider theme={theme}>
         <>
         <Header/>
         <Switch>
@@ -26,6 +31,7 @@ function App(props) {
             {Object.keys(userSession).length === 0 && <Route path="/start"><LoginPage/></Route>}
             <Route><p style={{width : "100vw", height : "100vh", display : "flex", justifyContent  :"center", alignItems : "center"}}>Error : Page not found</p></Route>
         </Switch>
+        {/* </ThemeProvider> */}
         </>
     );
 }

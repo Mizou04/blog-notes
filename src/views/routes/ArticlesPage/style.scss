@@ -4,5 +4,26 @@
 .articles{
     width: 100vw;
     min-height : 100vh;
-    padding-top: 50px;
+    padding : 50px 10px 0px 10px;
+    position: relative;
+    
+}
+
+.articles--options{
+    @extend .flexBetween;
+    width: 100%;
+    height: 40%;
+    padding: 0px 20px;
+}
+
+.articles--options-actions{
+    width: 80%;
+    height: 100%;
+    list-style: none;
+}
+
+.articles--options-addArticle{
+    @extend .flexCenter;
+    width: auto;
+    height: 100%;
 }

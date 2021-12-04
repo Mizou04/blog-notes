@@ -22,7 +22,7 @@ function ArticleDescription(props) {
                 </div>
             </header>
             <div className="post--description">
-                <div style={{backgroundImage : `url(${thumbnail})`, backgroundPosition : "0% 50%", backgroundSize:"cover"}} className="post--description-thumbnail"></div>
+                <a href="#" style={{backgroundImage : `url(${thumbnail}) no-repeat`}} className="post--description-thumbnail"></a>
                 <p className="post--description-summary">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum velit ducimus ad doloribus? Minus consequuntur tempora icing elit. Cum velit ducimus ad doloribus? Minus consequuntur tempo dolorem sequi nobis officia consectetur voluptas enim, distinctio, doloremque maxime eum similique assumenda?</p>
             </div>
             <div className="post--footer">
