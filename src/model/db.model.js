@@ -1,4 +1,4 @@
-import {collection, addDoc, setDoc, updateDoc, deleteDoc, doc, getFirestore, getDoc, getDocs} from "firebase/firestore"
+import {collection, addDoc, setDoc, updateDoc, deleteDoc, doc, getFirestore, getDoc, getDocs, } from "firebase/firestore"
 import {fireApp} from "./firebase.model"
 
 class IdbModel {
@@ -14,6 +14,7 @@ class IdbModel {
     setDoc(){}
     updateDoc(){}
     removeDoc(){}
+    getCollectionDocs(){}
 }
 
 class DBRef extends IdbModel {
@@ -72,6 +73,15 @@ class DBRef extends IdbModel {
      */
     async removeDoc(docPath){
         await deleteDoc(this._docRef(docPath))
+    }
+
+    async getCollectionDocs(query){
+        let DOCS_ARRAY = [];
+        return await (await getDocs(query)).forEach(doc=>{
+            if(doc && doc.exists()){
+                return [...DOCS_ARRAY , ...doc.data()];
+            }
+        })
     }
 
 }

@@ -1,25 +1,28 @@
 import "./style.scss"
-import {createRef, useContext, useEffect, useState, Component} from "react"
+import {createRef, useContext, useEffect, useCallback, useState, useMemo} from "react"
 import {Card, Paper, Input, FormControl, FormLabel, Button, Box} from "@material-ui/core";
 import {AddAPhoto, Clear, FormatBold, FormatItalic, FormatUnderlined, LinkRounded} from "@material-ui/icons";
 import {LoginContext} from "../../../controllers/login.controller"
-// import 'quill/dist/quill.core.css';
-// import 'quill/dist/quill.snow.css';
+import { red } from "@material-ui/core/colors";
+import { makeStyles } from "@material-ui/styles";
 
-import Quill from 'quill/core';
-import Toolbar from 'quill/modules/toolbar';
-import Snow from 'quill/themes/snow'; //snow works, but need to import and register formats, and replace icons...
-import BubbleTheme from 'quill/themes/bubble'; //snow works, but need to import and register formats, and replace icons...
+import { createEditor, Editor, Transforms, Text } from 'slate';
+// Import the Slate components and React plugin.
+import { Slate, Editable, withReact } from 'slate-react'
+import {CodeElement, DefaultElement, Leaf} from "./elements.js"
+import {CustomEditor} from "./helpers"
 
-import Bold from 'quill/formats/bold';
-import Italic from 'quill/formats/italic';
-import Header from 'quill/formats/header';
-import Underline from 'quill/formats/underline';
-import Link from 'quill/formats/link';
-import List, { ListItem } from 'quill/formats/list';
 
-import Icons from 'quill/ui/icons'; 
-
+const useStyles = makeStyles({
+    button : {
+        color : "white",
+        background : "royalblue",
+        "&:hover" : {
+            color : "white",
+            background : "lightblue"
+        }
+    }
+})
 
 const author = {name : "", id : ""}; //name : userSession.name ... id : userSession.id or ownerID
 
@@ -33,38 +36,30 @@ const blogPostMeta = {
 
 function TextEditor({setTextEditorState}){
     const {userSession, ownerID} = useContext(LoginContext);
-    const [textData, setTextData] = useState(blogPostMeta);
+    // const [textData, setTextData] = useState(blogPostMeta);
+    const [value, setValue] = useState([
+        {
+          type: 'paragraph',
+          children: [{ text: 'A line of text in a paragraph.' }],
+        },
+      ])
     const editorRef = createRef();
+    const classes = useStyles();
     
+    const editor = useMemo(() => withReact(createEditor()), []);
     
-    useEffect(()=>{
-        Quill.register({
-            'modules/toolbar': Toolbar,
-            'themes/snow': Snow,
-            'formats/bold': Bold,
-            'formats/italic': Italic,
-            'formats/header': Header,
-            'formats/underline': Underline,
-            'formats/link': Link,
-            'formats/list': List,
-            'formats/list/item': ListItem,
-            'ui/icons': Icons
-          });
-      
-          
-          const icons = Quill.import('ui/icons');
-          icons['bold'] = "B";
-          icons['italic'] = "I";
-          icons['underline'] = "U";
-          icons['link'] = "</>";
-          icons['clean'] = "Clear"; 
-          
-          var quill = new Quill('#editor', {
-            theme: 'snow', //this needs to come after the above, which registers Snow...
-            placeholder: "Write something awesome...",
-          });
-      
-    });
+    const renderElement = useCallback(props => {
+        switch (props.element.type) {
+            case 'code':
+            return <CodeElement {...props} />
+            default:
+            return <DefaultElement {...props} />
+        }
+    }, []);
+    const renderLeaf = useCallback(props => {
+        return <Leaf {...props} />
+      }, [])
+
     
             return (<div className="textEditor-container">
                 <Card className="textEditor">
@@ -76,17 +71,50 @@ function TextEditor({setTextEditorState}){
                         </FormControl>
                         <FormControl className="textEditor_header--picture-form">
                             <FormLabel htmlFor="textEditor_header--picture-input">
-                                <input id="textEditor_header--picture-input" type="file" accept="" className="textEditor_header--picture-input" placeholder="thumbnail image (max 2mb)"/>
+                                <input id="textEditor_header--picture-input" type="file" accept=".jpg, .png, .svg" className="textEditor_header--picture-input" placeholder="thumbnail image (max 2mb)"/>
                                 <Button color="primary"><AddAPhoto/></Button>
                             </FormLabel>
                         </FormControl>
                     </header>
-                    <div className="textEditor_body">
-                        {/* <div id="toolbar"></div> */}
-                        <div id='editor' className="textEditor_body-input"></div>
+                    <div id='editor' className="textEditor_body" style={{border : "1px red solid"}}>
+                    <Slate
+                        editor={editor}
+                        value={value}
+                        onChange={newValue => setValue(newValue)}
+                    >
+                        <Editable className="textEditor_body-input"
+                            renderElement={renderElement}
+                            renderLeaf={renderLeaf}
+                            onKeyDown={event => {
+                                if (!event.ctrlKey) {
+                                    return
+                                  }
+                    
+                                switch (event.key) {
+                                // When "`" is pressed, keep our existing code block logic.
+                                case '<': {
+                                    event.preventDefault()
+                                    CustomEditor.toggleCodeBlock(editor)
+                                    break;
+                                }
+                    
+                                // When "B" is pressed, bold the text in the selection.
+                                case 'b': {
+                                    event.preventDefault()
+                                    CustomEditor.toggleBoldMark(editor)
+                                    break;
+                                }
+                                
+                                case 'e': 
+                                    event.preventDefault();
+                                    CustomEditor.toggleItalicMark(editor)
+                            }
+                        }}
+                        />
+                    </Slate>
                     </div>
-                    <Button onClick={()=>setTextEditorState(false)}>Cancel</Button>
-                    <Button>sumbit</Button>
+                    <Button variant="outlined" color="secondary" onClick={()=>setTextEditorState(false)}>Cancel</Button>
+                    <Button variant="contained" className={classes.button}>sumbit</Button>
                 </Card>
             </div>
             )
