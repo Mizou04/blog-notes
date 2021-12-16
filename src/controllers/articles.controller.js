@@ -17,7 +17,7 @@ const blogPostMeta = {
             }  
 
 function ArticlesController(props) {
-    const {getUsersPath, getUser, setUser, updateUser} = useContext(UserContext);
+    const {getUsersPath, getUser, setUser, updateUser, userArrayUnion, userArrayRemove} = useContext(UserContext);
     const {loginHandler, signOutHandler, userSession, ownerID} = useContext(LoginContext)
     const {getDoc, setDoc, updateDoc, collectionPath, removeDoc} = articlesDBref;
     
@@ -28,9 +28,13 @@ function ArticlesController(props) {
     /**
      * @param {articleData : {articles : object[]}}
      */
+    // const setArticle = useCallback(async (path, articleData) =>{ 
+    //     let userArticles = await getUser(getUsersPath + userSession.id).data().articles;
+    //     await updateUser(getUsersPath + userSession.id, {articles : [...userArticles, articleData]})
+    //     await setDoc(path, articleData)
+    // });
     const setArticle = useCallback(async (path, articleData) =>{ 
-        let userArticles = await getUser(getUsersPath + userSession.id).data().articles;
-        await updateUser(getUsersPath + userSession.id, {articles : [...userArticles, articleData]})
+        await updateUser(getUsersPath + userSession.id, {articles : userArrayUnion(articleData)})
         await setDoc(path, articleData)
     });
     
@@ -44,16 +48,8 @@ function ArticlesController(props) {
         } catch(e){
             throw Error("something gone wrong!")
         }
-
-        let updatedArticle = await getArticle(path);
-        let userArticles = await getUser(getUsersPath + userSession.id).data().articles;
-        userArticles = userArticles.map(article=>{
-            if(article.id === updateArticle.id){
-                article = updatedArticle;
-            };
-            return article;
-        })
-        await updateUser(getUsersPath + userSession.id, {articles : [...userArticles]})
+        await updateUser(getUsersPath + userSession.id, {articles : userArrayRemove(articleData)})
+        await updateUser(getUsersPath + userSession.id, {articles : userArrayUnion(articleData)})
     })
 
 

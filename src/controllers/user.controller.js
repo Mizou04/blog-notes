@@ -19,10 +19,12 @@ function UserController(props) {
 
     const getUsersPath = useMemo(()=>{
         return userDBref.collectionPath;
-    })
+    });
+
+    let {docArrayUnion : userArrayUnion, docArrayRemove : userArrayRemove} = userDBref; 
 
     return (
-        <UserContext.Provider value={{getUsersPath, getUser, setUser, updateUser}}>
+        <UserContext.Provider value={{getUsersPath, getUser, setUser, updateUser, userArrayUnion, userArrayRemove}}>
             {props.children}
         </UserContext.Provider>
     );

@@ -1,0 +1,28 @@
+@import "../../sass/style.variables";
+@import "../../sass/layout.scss";
+
+.textEditor_header--picture-form{
+    @extend .flexCenter;
+    flex: 1;
+    height: 100%;
+    position: relative;
+}
+
+.textEditor_header--uploader-buttons{
+    position: absolute;
+    bottom: -100%;
+    height: auto;
+    width: 100%;
+    z-index: 122223;
+}
+
+.textEditor_header--uploader-body{
+    @extend .flexCenter;
+    background: white;
+    position: absolute;
+    width: 100%;
+    height: 400%;
+    bottom: -400%;
+    border: 4px solid black ;
+    z-index: 122222;
+}

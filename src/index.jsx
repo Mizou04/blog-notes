@@ -14,7 +14,7 @@ ReactDOM.render(
           </LoginController>  
         </UserController>
       </Router>
-  </React.StrictMode>,
+    </React.StrictMode>,
   document.getElementById('root')
 );
 

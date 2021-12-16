@@ -1,6 +1,5 @@
-import {collection, addDoc, setDoc, updateDoc, deleteDoc, doc, getFirestore, getDoc, getDocs, } from "firebase/firestore"
+import {collection, addDoc, setDoc, updateDoc, deleteDoc, doc, getFirestore, getDoc, getDocs, arrayUnion, arrayRemove} from "firebase/firestore"
 import {fireApp} from "./firebase.model"
-
 class IdbModel {
     constructor(firestore, collection, path){
         this.fireStore = firestore;
@@ -15,6 +14,8 @@ class IdbModel {
     updateDoc(){}
     removeDoc(){}
     getCollectionDocs(){}
+    docArrayRemove(){}
+    docArrayUnion(){}
 }
 
 class DBRef extends IdbModel {
@@ -38,7 +39,7 @@ class DBRef extends IdbModel {
     }
 
     async getDoc(docPath){
-        return (await getDoc(this._docRef(docPath)));
+        return await getDoc(this._docRef(docPath));
     }
     /**
      * 
@@ -83,8 +84,32 @@ class DBRef extends IdbModel {
             }
         })
     }
+    /**
+     * 
+     * @param {any[]} elements - elements to add to the doc array field
+     */
+    docArrayUnion(elements){
+        if(arguments.length === 0) throw Error("I see no arguments, pass at least 1") 
+        if(arguments.length > 1){
+            return arrayUnion(...elements)
+        } else {
+            return arrayUnion(elements)
+        }
+    }
+    /**
+     * 
+     * @param {any[]} elements - elements to remove to the doc array field
+     */
+    docArrayRemove(elements){
+        if(arguments.length === 0) throw Error("I see no arguments, pass at least 1") 
+        if(arguments.length > 1){
+            return arrayRemove(...elements)
+        } else {
+            return arrayRemove(elements)
+        }
+    }
 
 }
 
 export const userDBref = new DBRef(getFirestore(fireApp), collection, "users/");
-export const articlesDBref = new DBRef(getFirestore(fireApp), collection, "articles/")
+export const articlesDBref = new DBRef(getFirestore(fireApp), collection, "articles/");
