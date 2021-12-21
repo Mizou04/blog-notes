@@ -42,7 +42,7 @@ export default function LoginController({children}){
                         document = await getUser(getUsersPath + user.uid);
                     }
                 setUserSession(document.data());
-                history.replace("/profile/"+user.uid)
+                // history.replace("/profile/"+user.uid)
 
             } else {
                 setUserSession({});

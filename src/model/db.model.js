@@ -1,10 +1,11 @@
-import {collection, addDoc, setDoc, updateDoc, deleteDoc, doc, getFirestore, getDoc, getDocs, arrayUnion, arrayRemove} from "firebase/firestore"
-import {fireApp} from "./firebase.model"
+import {collection, addDoc, setDoc, updateDoc, deleteDoc, doc, getFirestore, getDoc, getDocs, arrayUnion, arrayRemove, query, where} from "firebase/firestore"
+import {fireApp, db} from "./firebase.model"
+
 class IdbModel {
     constructor(firestore, collection, path){
         this.fireStore = firestore;
         this.path = path;
-        this.collection = collection(this.fireStore ,this.path);
+        this.collection = collection;
     }
     _docRef(){}
     get collectionPath(){}
@@ -23,8 +24,12 @@ class DBRef extends IdbModel {
         super(firestore, collection, path);
     }
 
-    _docRef(docPath){
-        return doc(this.fireStore, docPath);
+    async getCollectionRef(){
+        return await this.collection(db, this.collectionPath);
+    }
+
+    _docRef = async(docPath) =>{
+        return await doc(await this.fireStore, docPath);
     }
     /**
      * 
@@ -35,11 +40,12 @@ class DBRef extends IdbModel {
     // }
 
     get collectionPath(){
-        return this.path[this.path.length-1] === "/" ? this.path : this.path+"/";
+        // return this.path[this.path.length-1] === "/" ? this.path : this.path+"/";
+        return this.path
     }
 
     async getDoc(docPath){
-        return await getDoc(this._docRef(docPath));
+        return await getDoc(await this._docRef(docPath));
     }
     /**
      * 
@@ -47,7 +53,7 @@ class DBRef extends IdbModel {
      * @param {{}} data - object containing data to add (or field to add)
      */
     async addDoc(data){
-        console.log( await addDoc(this.collection, data))
+        return await addDoc(await this.getCollectionRef(), data);
     }
     
     /**
@@ -55,8 +61,8 @@ class DBRef extends IdbModel {
      * @param {string} docPath - doc pathname in the collection
      * @param {{}} data - object containing data to add (or field to add)
      */
-    async setDoc(docPath, data){
-        await setDoc(this._docRef(docPath), data)
+    setDoc = async(docPath, data) =>{
+        return await setDoc(await this._docRef(docPath), data);
     }
     
     /**
@@ -65,7 +71,7 @@ class DBRef extends IdbModel {
      * @param {{}} data - object containing data to add (or field to add)
      */
     async updateDoc(docPath ,data){
-        await updateDoc(this._docRef(docPath), data)
+        return await updateDoc(await this._docRef(docPath), data)
     }
     
     /**
@@ -73,27 +79,25 @@ class DBRef extends IdbModel {
      * @param {doc} doc
      */
     async removeDoc(docPath){
-        await deleteDoc(this._docRef(docPath))
+        return await deleteDoc(this._docRef(docPath))
     }
-
-    async getCollectionDocs(query){
-        let DOCS_ARRAY = [];
-        return await (await getDocs(query)).forEach(doc=>{
-            if(doc && doc.exists()){
-                return [...DOCS_ARRAY , ...doc.data()];
-            }
-        })
+    /**
+     * @param {{condition : string , operator : string, value : string}} options 
+     * @returns 
+     */
+    getCollectionDocs = async (QUERY) =>{
+        let q = query(this.collection(db, QUERY));
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map(doc => doc.data())
     }
     /**
      * 
      * @param {any[]} elements - elements to add to the doc array field
      */
-    docArrayUnion(elements){
-        if(arguments.length === 0) throw Error("I see no arguments, pass at least 1") 
-        if(arguments.length > 1){
+    docArrayUnion(...elements){
+        if(arguments.length === 0) throw Error("I see no arguments, pass at least 1")
+        else{
             return arrayUnion(...elements)
-        } else {
-            return arrayUnion(elements)
         }
     }
     /**
@@ -111,5 +115,5 @@ class DBRef extends IdbModel {
 
 }
 
-export const userDBref = new DBRef(getFirestore(fireApp), collection, "users/");
-export const articlesDBref = new DBRef(getFirestore(fireApp), collection, "articles/");
+export const userDBref = new DBRef(db, collection, "users/");
+export const articlesDBref = new DBRef(db, collection, "articles/");

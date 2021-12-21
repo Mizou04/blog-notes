@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, memo, useEffect } from 'react';
 import ArticleDescription from '../../components/ArticleDescription/ArticleDescription';
-import TextEditor from "../../components/TextEditor/TextEditor";
+import {LoginContext} from "../../../controllers/login.controller"
+import {ArticlesContext} from "../../../controllers/articles.controller"
 
 import "./style.scss";
 import { Button, Hidden, Typography } from "@material-ui/core"
@@ -8,9 +9,19 @@ import {Add} from "@material-ui/icons";
 import {Link as RouterLink} from "react-router-dom"
 
 function ArticlesPage(props) {
-    let articles = new Array(3).fill(0, 0, 3);
+    // let articles = new Array(3).fill(0, 0, 3);
+    let {userSession} = useContext(LoginContext);
+    // let ARTICLES = useContext(ArticlesContext);
+    let {getArticlesCollection ,updateArticle ,getArticle, getArticlesPath} = useContext(ArticlesContext);
+    let [articles, setArticles] = useState([]);
 
-
+    useEffect(()=>{
+        
+        getArticlesCollection("articles").then(v => {
+            setArticles(prev => [...prev, ...v])
+            console.log(v)
+        })
+    }, [])
 
     return (
         <div  className='articles'>
@@ -19,18 +30,20 @@ function ArticlesPage(props) {
                     <li className="articles--options-action-filter">Filter by:</li>
                 </ul>
                 <div className="articles--options-addArticle">
-                    <Button component={RouterLink} startIcon={<Add/>} color="primary" variant="contained"
+                    {!!Object.keys(userSession).length && <Button component={RouterLink} startIcon={<Add/>} color="primary" variant="contained"
                          to={{pathname: "/compose", state:{}}}>
                         New Article
-                    </Button>
+                    </Button>}
                 </div>
             </header>
-
             <div className="articles--list">
-                {articles.map(v=> <ArticleDescription/>)}
+                {/* {articles.map(value=> <ArticleDescription data={value}/>)} */}
+                {articles.map((article)=>{
+                    return <ArticleDescription data={article} />
+                })}
             </div>
         </div>
     );
 }
 
-export default ArticlesPage;
+export default memo(ArticlesPage);

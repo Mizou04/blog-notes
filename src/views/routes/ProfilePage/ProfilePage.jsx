@@ -35,7 +35,7 @@ function ProfilePage(props) {
     }, [userID])
 
     return (
-        <body className="profile profile--body">
+        <div className="profile profile--body">
             <section className="profile_banner">
                 {isOwner && <Button startIcon={<Add/>} >change banner photo</Button>}
             </section>
@@ -51,8 +51,8 @@ function ProfilePage(props) {
                 </div>
                 <div className="profile_user--favorites-container">
                     <div className="profile_user--favorites">
-                        {favorites.map(({img, title, description})=>{
-                            return <div className="profile_user--favorite">
+                        {favorites.map(({img, title, description}, index)=>{
+                            return <div key={index} className="profile_user--favorite">
                                 <img className="profile_user--favorite-thumb" src={img} alt="user profile picture" />
                                 <div className="profile_user--favorite-description">
                                     <h6>{title}</h6>
@@ -82,7 +82,7 @@ function ProfilePage(props) {
                     <ArticleCard/>
                 </div>
             </section>
-        </body>
+        </div>
     );
 }
 

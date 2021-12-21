@@ -1,0 +1,18 @@
+@import "../../sass/style.variables";
+@import "../../sass/layout.scss";
+
+.loader--container{
+    @extend .flexCenter;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(255, 255, 255, 0.096);
+    filter: blur(2);
+}
+.loader--body{
+    @extend .flexCenter;
+    width: 33%;
+    height: 50%;
+}
