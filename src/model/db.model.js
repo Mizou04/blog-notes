@@ -19,17 +19,20 @@ class IdbModel {
     docArrayUnion(){}
 }
 
-class DBRef extends IdbModel {
+export class DBRef extends IdbModel {
     constructor(firestore ,collection, path){
         super(firestore, collection, path);
+        // this._docRef = this._docRef.bind(this);
+        this.getCollectionRef = this.getCollectionRef.bind(this);
     }
-
+    
+    
     async getCollectionRef(){
-        return await this.collection(db, this.collectionPath);
+        return await this.collection(db, this.path);
     }
 
-    _docRef = async(docPath) =>{
-        return await doc(await this.fireStore, docPath);
+    async _docRef(docPath){
+        return await doc(await db, docPath);
     }
     /**
      * 
@@ -40,12 +43,12 @@ class DBRef extends IdbModel {
     // }
 
     get collectionPath(){
-        // return this.path[this.path.length-1] === "/" ? this.path : this.path+"/";
-        return this.path
+        return this.path[this.path.length-1] === "/" ? this.path : this.path+"/";
+        // return this.path
     }
 
     async getDoc(docPath){
-        return await getDoc(await this._docRef(docPath));
+        return await getDoc(doc(db, docPath));
     }
     /**
      * 
@@ -53,7 +56,7 @@ class DBRef extends IdbModel {
      * @param {{}} data - object containing data to add (or field to add)
      */
     async addDoc(data){
-        return await addDoc(await this.getCollectionRef(), data);
+        return await addDoc(await this.getCollectionRef(this.path), data);
     }
     
     /**
@@ -61,7 +64,7 @@ class DBRef extends IdbModel {
      * @param {string} docPath - doc pathname in the collection
      * @param {{}} data - object containing data to add (or field to add)
      */
-    setDoc = async(docPath, data) =>{
+    async setDoc(docPath, data){
         return await setDoc(await this._docRef(docPath), data);
     }
     
@@ -85,8 +88,8 @@ class DBRef extends IdbModel {
      * @param {{condition : string , operator : string, value : string}} options 
      * @returns 
      */
-    getCollectionDocs = async (QUERY) =>{
-        let q = query(this.collection(db, QUERY));
+    async getCollectionDocs(QUERY){
+        let q = query(collection(db , QUERY));
         const snapshot = await getDocs(q);
         return snapshot.docs.map(doc => doc.data())
     }
@@ -117,3 +120,4 @@ class DBRef extends IdbModel {
 
 export const userDBref = new DBRef(db, collection, "users/");
 export const articlesDBref = new DBRef(db, collection, "articles/");
+// console.log(userDBref);

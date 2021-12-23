@@ -49,21 +49,23 @@ function BlogPost(props) {
     let {setArticle, addArticle ,updateArticle ,getArticle ,getArticlesPath} = useContext(ArticlesContext);
     let [isLoading, setIsloading] = useState(false);
     let [isAlert, setIsAlert] = useState(false);
-
+    let [mode, setMode] = useState("read")
+    
     const history = useHistory()
-    const {state} = history.location;
+    const {state, pathname} = history.location;
     const {articleID} = useParams();
+
+    let [blogpost, setBlogpost] = useState({title : JSON.parse(window.sessionStorage.getItem("TITLE")) || null,
+                                     imgSrc : JSON.parse(window.sessionStorage.getItem("THUMBNAIL")) || null, 
+                                     content : JSON.parse(window.sessionStorage.getItem("CONTENT")) || {blocks : []}});
 
     useEffect(()=>{
         console.log(history.location.pathname)
     });
     
     const edjsParser = edjsHTML();
-    let blogpost = state?.data.content;
 
-    let blocks = blogpost?.blocks;
 
-    let parsedBlock = edjsParser.parse({blocks});
 
     const articleRef = useRef();
     const thumbnailRef = useRef();
@@ -71,18 +73,22 @@ function BlogPost(props) {
     const classes = useStyles();
 
     const postData = {
-                title : state.data.title,
-                thumbnail : state.data.imgSrc,
-                content : state.data.content,
-                summary : undefined,
-                date : state.data.content.time,
+                title : state?.data.title,
+                thumbnail : state?.data.imgSrc,
+                content : state?.data.content,
+                date : state?.data.content.time,
                 author : {
                     name : userSession.name, id : userSession.id, logo : userSession.profilePic 
                 },
-                id : userSession.id + state.data.content.time
+                id : userSession.id + state?.data.content.time
             }
 
-    
+    const clearSessionStorageHandler = () => {
+        window.sessionStorage.removeItem("CONTENT")
+        window.sessionStorage.removeItem("TITLE")
+        window.sessionStorage.removeItem("THUMBNAIL")
+    };
+
     const sumbitHandler = () =>{
         /**
          * - click : show a loader and publish the article(data) to firestore
@@ -91,42 +97,80 @@ function BlogPost(props) {
          * getArticlesPath + userSession.id + blogpost.content.time,
          */
         setIsloading(true);
-        setArticle(getArticlesPath + userSession.id + blogpost.content.time, postData).then(()=>{
-            setIsloading(false);
-        }).then(()=>{
-            setIsAlert(true);
-        })
-        // .catch((e)=>{
-        //     setIsAlert(false);
-        //     throw Error(e);
-        //     window.alert("something is not allowed")
-        // });
+        if(mode === "create"){
+            setArticle(getArticlesPath + userSession.id + blogpost.content.time, postData)
+            .then(()=>{
+                setIsloading(false);
+            })
+            .then(()=>{
+                setIsAlert(true);
+            })
+            .catch((e)=>{
+                setIsAlert(false);
+                throw Error(e);
+                window.alert("something is not allowed")
+            });
+        } else if(mode === "update"){
+            updateArticle(getArticlesPath + articleID, postData).then(()=>{
+                setIsloading(false);
+            }).then(()=>{
+                setIsAlert(true);
+            })
+            .catch((e)=>{
+                setIsAlert(false);
+                throw Error(e);
+                // window.alert("something is not allowed")
+            });
+        };
+        clearSessionStorageHandler();
     }
+    
     const promptHandler = () =>{
         setIsAlert(false);
         history.replace("/articles");
     }
     
-    useEffect(()=>{
-        // articleID && (blogpost = (async ()=>{
-        //     await getArticle(getArticlesPath + articleID)
-        // })())
-        articleID && getArticle(getArticlesPath + articleID).then(data=>{
-            blogpost = data.content;
-        })
-    }, [articleID])
+    // useEffect(()=>{
+    //     switch (pathname){
+    //         case "/create/preview" : 
+    //             setMode("create")
+    //             break;
+    //         case "/blogpost/" + articleID :
+    //             setMode("read");
+    //             break;
+    //         case "/modify/" + articleID + "/preview" :
+    //             setMode("update");
+    //             break;
+    //     }
+    // }, [pathname])
 
     useEffect(()=>{
+        
+        switch(pathname){
+            case "/blogpost/" + articleID :
+                getArticle(getArticlesPath + articleID).then(article=>{
+                    setBlogpost(article.data());
+                    console.log(article.data())
+                });
+                setMode("read")
+                break;
+            case "/create/preview" :
+                setBlogpost(state?.data);
+                setMode("create")
+                break;
+            case "/modify/" + articleID + "/preview":
+                setBlogpost(state?.data); 
+                setMode("update")
+                break;
+        }
+        
+        let parsedBlock = edjsParser.parse({blocks : blogpost?.content?.blocks})
+        
         parsedBlock?.forEach(element=>{
             articleRef.current.innerHTML += element;
         });
-        postData.summary = articleRef.current.innerHTML.substring(0, 55)
-    }, [])
 
-    useEffect(()=>{
-        console.log(thumbnailRef.current)
-    }, [thumbnailRef.current])
-
+    }, [pathname])
 
 
     return (
@@ -134,23 +178,23 @@ function BlogPost(props) {
             {isLoading && <Loader/>}
             {isAlert && <Alert text="your article is posted" handler={promptHandler} />}
         <div className="blog_post">
-            <h1 className="blog_post--header">{blogpost.title || "Lorem, ipsum dolor."}</h1>
+            <h1 className="blog_post--header">{blogpost?.title}</h1>
             <div className="blog_post--meta">
                 <h4 className="blog_post--meta-author">{userSession.name}</h4>
-                <h4 className="blog_post--meta-date">{new Date(blogpost.content.time).toDateString()}</h4>
+                <h4 className="blog_post--meta-date">{new Date(blogpost?.content?.time).toDateString()}</h4>
             </div>
             <div className="blog_post--thumb">
-                <img ref={thumbnailRef} src={blogpost.imgSrc} alt="thumbnail image" className="blog_post--thumb-picture" />
+                <img ref={thumbnailRef} src={blogpost?.thumbnail || blogpost?.imgSrc} alt="thumbnail image" className="blog_post--thumb-picture" />
                 {/* <span className="blog_post--thumb-description">pic by me</span> */}
             </div>
 
             <article ref={articleRef} color="black" className="blog_post--article"/>
 
         </div>
-        {!articleID &&
+        {(mode === "create" || mode === "update" ) &&
         <aside className="blog_post--aside">
             <div className="blog_post--aside-content">
-                <span>are you ready to post?</span>
+                <span>are you ready to {mode === "create" ? "post" : "proceed"}?</span>
                 <div  className={`blog_post--aside-buttons`}>
                 <Button onClick={()=> history.goBack()} className={classes.cancelBtn}>not yet</Button> 
                 <Button onClick={sumbitHandler} className={classes.sumbitBtn} variant="contained" color="primary">sumbit</Button>

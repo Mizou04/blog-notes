@@ -1,22 +1,19 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useContext} from 'react';
 import "./style.scss"
-import {ThumbUpTwoTone, Comment, ThumbUpRounded, AddCommentRounded} from "@material-ui/icons"
+import {ThumbUpTwoTone, Comment, ThumbUpRounded, AddCommentRounded, SettingsApplications} from "@material-ui/icons"
 import logo from "../../assets/logo.jpg"
 // import thumbnail from "../../assets/pexels.jpg"
 import { Button } from '@material-ui/core';
 import {Link as RouterLink} from "react-router-dom"
+import { LoginContext } from '../../../controllers/login.controller';
 
 function ArticleDescription({data}) {
-    let {title, thumbnail, summary, date, author, id} = data;
-    let summaryRef = useRef()
-
-
-    useEffect(()=>{
-        summaryRef.current.innerHTML = summary
-    }, [])
+    const {userSession} = useContext(LoginContext)
+    let {title, thumbnail,  date, author, id} = data;
 
     return (
         <div className="post">
+            {author.id === userSession.id && <Button startIcon={<SettingsApplications/>} />}
             <header className="post--header">
                 <div className="post--meta">
                     <RouterLink to={{pathname : `/blogpost/${id}`}} className="post--meta-title">{title}</RouterLink>
@@ -32,7 +29,7 @@ function ArticleDescription({data}) {
             </header>
             <div className="post--description">
                 <a href={`/blogpost/${id}`} style={{background : `url("${thumbnail}") no-repeat`, backgroundPosition : "center", backgroundSize : "contain"}} className="post--description-thumbnail"></a>
-                <p ref={summaryRef} className="post--description-summary">
+                <p className="post--description-summary">
                 </p>
                     {/* Lorem ipsum dolor sit amet, consectetur adipisicing elit. Cum velit ducimus ad doloribus? Minus consequuntur tempora icing elit. Cum velit ducimus ad doloribus? Minus consequuntur tempo dolorem sequi nobis officia consectetur voluptas enim, distinctio, doloremque maxime eum similique assumenda?</p> */}
             </div>

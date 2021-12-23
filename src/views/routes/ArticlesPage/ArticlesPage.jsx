@@ -31,7 +31,7 @@ function ArticlesPage(props) {
                 </ul>
                 <div className="articles--options-addArticle">
                     {!!Object.keys(userSession).length && <Button component={RouterLink} startIcon={<Add/>} color="primary" variant="contained"
-                         to={{pathname: "/compose", state:{}}}>
+                         to={{pathname: "/create", state:{}}}>
                         New Article
                     </Button>}
                 </div>
