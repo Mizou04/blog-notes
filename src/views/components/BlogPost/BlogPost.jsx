@@ -47,7 +47,8 @@ const useStyles = makeStyles(()=>({
 function BlogPost(props) {
     let {userSession} = useContext(LoginContext);
     let {setArticle, addArticle ,updateArticle ,getArticle ,getArticlesPath} = useContext(ArticlesContext);
-    let [isLoading, setIsloading] = useState(false);
+    let [isSumbitting, setIsSubmitting] = useState(false);
+    let [isLoading, setIsLoading]  = useState(false);
     let [isAlert, setIsAlert] = useState(false);
     let [mode, setMode] = useState("read")
     
@@ -96,11 +97,11 @@ function BlogPost(props) {
          * - after closing the prompt we should be directed to articlesPage (route)
          * getArticlesPath + userSession.id + blogpost.content.time,
          */
-        setIsloading(true);
+        setIsSubmitting(true);
         if(mode === "create"){
             setArticle(getArticlesPath + userSession.id + blogpost.content.time, postData)
             .then(()=>{
-                setIsloading(false);
+                setIsSubmitting(false);
             })
             .then(()=>{
                 setIsAlert(true);
@@ -112,7 +113,7 @@ function BlogPost(props) {
             });
         } else if(mode === "update"){
             updateArticle(getArticlesPath + articleID, postData).then(()=>{
-                setIsloading(false);
+                setIsSubmitting(false);
             }).then(()=>{
                 setIsAlert(true);
             })
@@ -145,7 +146,7 @@ function BlogPost(props) {
     // }, [pathname])
 
     useEffect(()=>{
-        
+        setIsLoading(true);
         switch(pathname){
             case "/blogpost/" + articleID :
                 getArticle(getArticlesPath + articleID).then(article=>{
@@ -163,45 +164,52 @@ function BlogPost(props) {
                 setMode("update")
                 break;
         }
-        
-        let parsedBlock = edjsParser.parse({blocks : blogpost?.content?.blocks})
-        
-        parsedBlock?.forEach(element=>{
-            articleRef.current.innerHTML += element;
-        });
+        setIsLoading(false);
+    }, [pathname]);
 
-    }, [pathname])
+    useEffect(()=>{
+        {
+            edjsParser.parse({blocks : blogpost?.content?.blocks}).forEach(element=>{
+                articleRef.current.innerHTML += element;
+            })
+        }
+    }, [blogpost.content])
 
 
     return (
         <div  className="blog">
-            {isLoading && <Loader/>}
+            {isSumbitting && <Loader/>}
             {isAlert && <Alert text="your article is posted" handler={promptHandler} />}
-        <div className="blog_post">
-            <h1 className="blog_post--header">{blogpost?.title}</h1>
-            <div className="blog_post--meta">
-                <h4 className="blog_post--meta-author">{userSession.name}</h4>
-                <h4 className="blog_post--meta-date">{new Date(blogpost?.content?.time).toDateString()}</h4>
-            </div>
-            <div className="blog_post--thumb">
-                <img ref={thumbnailRef} src={blogpost?.thumbnail || blogpost?.imgSrc} alt="thumbnail image" className="blog_post--thumb-picture" />
-                {/* <span className="blog_post--thumb-description">pic by me</span> */}
-            </div>
+        {isLoading ? <Loader/> :
+            <div className="blog_post">
 
-            <article ref={articleRef} color="black" className="blog_post--article"/>
-
-        </div>
-        {(mode === "create" || mode === "update" ) &&
-        <aside className="blog_post--aside">
-            <div className="blog_post--aside-content">
-                <span>are you ready to {mode === "create" ? "post" : "proceed"}?</span>
-                <div  className={`blog_post--aside-buttons`}>
-                <Button onClick={()=> history.goBack()} className={classes.cancelBtn}>not yet</Button> 
-                <Button onClick={sumbitHandler} className={classes.sumbitBtn} variant="contained" color="primary">sumbit</Button>
-                {/*return to texteditor*/}
+                <h1 className="blog_post--header">{blogpost?.title}</h1>
+                <div className="blog_post--meta">
+                    <h4 className="blog_post--meta-author">{userSession.name}</h4>
+                    <h4 className="blog_post--meta-date">{new Date(blogpost?.content?.time).toDateString()}</h4>
                 </div>
+                <div className="blog_post--thumb">
+                    <img ref={thumbnailRef} src={blogpost?.thumbnail || blogpost?.imgSrc} alt="thumbnail image" className="blog_post--thumb-picture" />
+                    {/* <span className="blog_post--thumb-description">pic by me</span> */}
+                </div>
+
+                <article ref={articleRef} color="black" className="blog_post--article">
+                    
+                </article>
+
             </div>
-        </aside>}
+            }
+            {(mode === "create" || mode === "update" ) &&
+            <aside className="blog_post--aside">
+                <div className="blog_post--aside-content">
+                    <span>are you ready to {mode === "create" ? "post" : "proceed"}?</span>
+                    <div  className={`blog_post--aside-buttons`}>
+                    <Button onClick={()=> history.goBack()} className={classes.cancelBtn}>not yet</Button> 
+                    <Button onClick={sumbitHandler} className={classes.sumbitBtn} variant="contained" color="primary">sumbit</Button>
+                    {/*return to texteditor*/}
+                    </div>
+                </div>
+            </aside>}
 
         {/* <div className="blog_more">
             <h3 className="blog_more_header">Related : </h3>

@@ -22,7 +22,7 @@ class IdbModel {
 export class DBRef extends IdbModel {
     constructor(firestore ,collection, path){
         super(firestore, collection, path);
-        // this._docRef = this._docRef.bind(this);
+        this._docRef = this._docRef.bind(this);
         this.getCollectionRef = this.getCollectionRef.bind(this);
     }
     
@@ -32,7 +32,7 @@ export class DBRef extends IdbModel {
     }
 
     async _docRef(docPath){
-        return await doc(await db, docPath);
+        return doc(await db, docPath);
     }
     /**
      * 
@@ -65,7 +65,7 @@ export class DBRef extends IdbModel {
      * @param {{}} data - object containing data to add (or field to add)
      */
     async setDoc(docPath, data){
-        return await setDoc(await this._docRef(docPath), data);
+        return await setDoc(await doc(db, docPath), data);
     }
     
     /**

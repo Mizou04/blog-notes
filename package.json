@@ -2,6 +2,7 @@
   "name": "blog-notes",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://mizou04.github.io/Blog-notes",
   "dependencies": {
     "@draft-js-plugins/buttons": "^4.1.1",
     "@draft-js-plugins/editor": "^4.1.0",
